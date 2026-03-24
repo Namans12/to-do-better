@@ -37,7 +37,6 @@ describe("Search API - GET /api/search", () => {
       high_priority?: number;
       reminder_at?: string | null;
       recurrence_rule?: string | null;
-      planning_level?: number;
       is_completed?: number;
       deleted_at?: string | null;
       position?: number;
@@ -59,8 +58,6 @@ describe("Search API - GET /api/search", () => {
       next_occurrence_at: options.recurrence_rule ? (options.reminder_at ?? now) : null,
       is_completed: options.is_completed ?? 0,
       position: options.position ?? 0,
-      parent_todo_id: null,
-      planning_level: options.planning_level ?? 0,
       deleted_at: options.deleted_at ?? null,
       created_at: now,
       updated_at: options.updated_at ?? now,
@@ -333,30 +330,27 @@ describe("Search API - GET /api/search", () => {
       expect(body.data.results[0].title).toBe("Work task completed");
     });
 
-    it("should filter by high priority, reminder, connection kind, and planning level", async () => {
+    it("should filter by high priority, reminder, and connection kind", async () => {
       const groupId = createGroup("Advanced");
       const reminderAt = new Date(Date.now() + 60_000).toISOString();
       const matchingTodo = createTodo(groupId, "Advanced task", {
         high_priority: 1,
         reminder_at: reminderAt,
         recurrence_rule: "daily",
-        planning_level: 3,
       });
       const otherTodo = createTodo(groupId, "Advanced other", {
         high_priority: 0,
-        planning_level: 1,
       });
       createConnection("dependency", [matchingTodo, otherTodo]);
 
       const res = await ctx.app.request(
-        `/api/search?q=Advanced&high_priority=true&has_reminder=true&connection_kind=dependency&planning_level=3`
+        `/api/search?q=Advanced&high_priority=true&has_reminder=true&connection_kind=dependency`
       );
       expect(res.status).toBe(200);
       const body = await res.json();
       expect(body.data.count).toBe(1);
       expect(body.data.results[0].id).toBe(matchingTodo);
       expect(body.data.results[0].connection_kind).toBe("dependency");
-      expect(body.data.results[0].planning_level).toBe(3);
     });
   });
 

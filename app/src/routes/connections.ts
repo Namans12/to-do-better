@@ -805,7 +805,6 @@ export function createConnectionsRouter(dbOverride?: DbOverride) {
           400
         );
       }
-      const mergedKind = primary.kind;
       const dedup = new Set(mergedTodoIds);
       if (dedup.size !== mergedTodoIds.length) {
         return c.json({ error: "Merged chain produced duplicate todos" }, 400);

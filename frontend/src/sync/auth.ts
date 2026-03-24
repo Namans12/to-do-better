@@ -50,16 +50,6 @@ export function normalizeAuthRedirectUrl(url: string): string {
   return wrappedUrl ? normalizeAuthRedirectUrl(wrappedUrl) : parsed.toString();
 }
 
-export function isSupabaseVerifyLink(url: string) {
-  const normalized = normalizeAuthRedirectUrl(url);
-  const parsed = new URL(normalized);
-  return (
-    parsed.hostname.endsWith(".supabase.co") &&
-    parsed.pathname.includes("/auth/v1/verify") &&
-    parsed.searchParams.has("token")
-  );
-}
-
 export function getAuthRedirectUrl() {
   return isNativeShell() ? NATIVE_AUTH_REDIRECT_URL : window.location.origin;
 }
@@ -77,17 +67,6 @@ export async function getSyncSession() {
     sessionPromise = null;
   });
   return sessionPromise;
-}
-
-export async function sendMagicLink(email: string) {
-  if (!supabase) throw new Error("Supabase sync is not configured.");
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: getAuthRedirectUrl(),
-    },
-  });
-  if (error) throw error;
 }
 
 export async function signInWithEmailPassword(email: string, password: string) {

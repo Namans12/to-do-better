@@ -134,25 +134,6 @@ const restTodosApi = {
     }),
 };
 
-// ── Batch ───────────────────────────────────────────────
-export const batchApi = {
-  complete: (ids: string[]) =>
-    request<{ affected: number }>("/todos/batch/complete", {
-      method: "POST",
-      body: JSON.stringify({ ids }),
-    }),
-  delete: (ids: string[]) =>
-    request<{ affected: number }>("/todos/batch/delete", {
-      method: "POST",
-      body: JSON.stringify({ ids }),
-    }),
-  move: (ids: string[], targetGroupId: string) =>
-    request<{ affected: number }>("/todos/batch/move", {
-      method: "POST",
-      body: JSON.stringify({ ids, targetGroupId }),
-    }),
-};
-
 const restTrashApi = {
   list: () => request<TrashPayload>("/trash"),
   restoreGroup: (groupId: string) =>

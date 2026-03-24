@@ -18,7 +18,7 @@ const app = createApp();
 
 console.log(`Nodes To-Do server starting on port ${PORT}...`);
 
-const server = serve({
+serve({
   fetch: app.fetch,
   port: PORT,
 });

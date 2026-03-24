@@ -19,9 +19,11 @@
 
 - A task can belong to only one connection total.
 - `sequence`, `dependency`, and `related` connections support 2 to 7 tasks.
-- `branch` connections support at most 3 tasks:
-  - item 1 is the root
-  - items 2 and 3 are the branch children
+- `branch` connections support rooted trees with:
+  - 2 to 7 total tasks
+  - exactly one root
+  - at most 2 children per node
+  - at most depth 7
 - Reordering inside a connection is fully free and persists.
 
 ## Connection kind behavior
@@ -35,10 +37,9 @@
   - All later incomplete items are counted as blocked.
   - Completing a blocked dependency task is rejected until its predecessors are done.
 - `branch`
-  - A split or fork in work.
-  - First item is the root.
-  - Children are blocked until the root is complete.
-  - Once the root is done, incomplete children are all available.
+  - A split or fork in work with a rooted tree structure.
+  - Root tasks unlock their direct children.
+  - A branch item is available only when every ancestor on its path is complete.
 - `related`
   - Connected, but not strictly ordered.
   - All incomplete items remain available.
@@ -55,7 +56,6 @@
   - dependency connections lay out vertically
   - branch connections fan out from the root
   - related connections cluster together
-  - planning levels influence left-to-right placement
 - GraphPlan also supports manual re-application of these presets:
   - smart
   - horizontal
@@ -64,16 +64,13 @@
   - planning
 - Selecting an edge in GraphPlan opens a connection inspector for renaming, meaning changes, deletion, and layout actions.
 
-## Notes and planning rules
+## Notes rules
 
 - Notes are stored in the task description field.
 - Long notes collapse by default and can be expanded inline.
 - URLs in notes render as links.
 - Checklist-style lines render visually when written as `- [ ]` or `- [x]`.
 - The note editor provides quick insert helpers for headings, links, and checklist lines.
-- Planning levels range from `0` to `5`.
-- A parent task, when set, must exist in the same group and cannot point to the task itself.
-- Parent tasks render above subtasks in the group list when both are solo tasks.
 
 ## Reminder rules
 

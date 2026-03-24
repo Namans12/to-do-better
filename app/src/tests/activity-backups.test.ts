@@ -183,13 +183,13 @@ describe("Activity and backups API", () => {
     const parentRes = await ctx.app.request(`/api/groups/${sourceGroupBody.data.id}/todos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: "Template Parent", planning_level: 2 }),
+      body: JSON.stringify({ title: "Template Parent" }),
     });
     const parentBody = await parentRes.json();
     const childRes = await ctx.app.request(`/api/groups/${sourceGroupBody.data.id}/todos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: "Template Child", parent_todo_id: parentBody.data.id }),
+      body: JSON.stringify({ title: "Template Child" }),
     });
     const childBody = await childRes.json();
 

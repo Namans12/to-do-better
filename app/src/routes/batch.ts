@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { eq, inArray, isNull, and, sql } from "drizzle-orm";
+import { eq, isNull, and, sql } from "drizzle-orm";
 import { getDb } from "../db/connection.js";
 import { groups, todos } from "../db/schema.js";
 

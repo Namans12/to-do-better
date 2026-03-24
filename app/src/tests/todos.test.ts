@@ -126,7 +126,7 @@ describe("Todos CRUD API", () => {
       expect(body.data.reminder_at).toBeDefined();
     });
 
-    it("should create a recurring reminder task with planning metadata", async () => {
+    it("should create a recurring reminder task", async () => {
       const reminderAt = new Date(Date.now() + 60_000).toISOString();
       const res = await ctx.app.request(`/api/groups/${testGroupId}/todos`, {
         method: "POST",
@@ -135,7 +135,6 @@ describe("Todos CRUD API", () => {
           title: "Recurring",
           reminder_at: reminderAt,
           recurrence_rule: "daily",
-          planning_level: 2,
         }),
       });
       const body = await res.json();
@@ -144,7 +143,6 @@ describe("Todos CRUD API", () => {
       expect(body.data.recurrence_rule).toBe("daily");
       expect(body.data.recurrence_enabled).toBe(1);
       expect(body.data.next_occurrence_at).toBe(body.data.reminder_at);
-      expect(body.data.planning_level).toBe(2);
     });
 
     it("should allow recurring tasks without a reminder timestamp", async () => {
@@ -460,8 +458,7 @@ describe("Todos CRUD API", () => {
       expect(body.data.reminder_at).toBeDefined();
     });
 
-    it("should update recurrence and parent task", async () => {
-      const { body: parent } = await createTodo(testGroupId, "parent");
+    it("should update recurrence metadata", async () => {
       const { body: child } = await createTodo(testGroupId, "child");
       const reminderAt = new Date(Date.now() + 120_000).toISOString();
 
@@ -471,8 +468,6 @@ describe("Todos CRUD API", () => {
         body: JSON.stringify({
           reminder_at: reminderAt,
           recurrence_rule: "weekly",
-          planning_level: 3,
-          parent_todo_id: parent.data.id,
         }),
       });
       const body = await res.json();
@@ -480,8 +475,6 @@ describe("Todos CRUD API", () => {
       expect(res.status).toBe(200);
       expect(body.data.recurrence_rule).toBe("weekly");
       expect(body.data.recurrence_enabled).toBe(1);
-      expect(body.data.parent_todo_id).toBe(parent.data.id);
-      expect(body.data.planning_level).toBe(3);
     });
 
     it("should update updated_at timestamp", async () => {

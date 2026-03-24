@@ -19,8 +19,6 @@
   - `high_priority`
   - `reminder_at`
   - optional recurring reminder rule (`daily`, `weekly`, `monthly`)
-  - `planning_level`
-  - optional `parent_todo_id`
   - completion state
   - persisted ordering metadata
 - Notes are optional and are surfaced in list, search, and agenda contexts.
@@ -30,11 +28,10 @@
   - auto-linked URLs
   - checklist-style lines using `- [ ]` and `- [x]`
   - quick insert helpers for headings, links, and checklists while editing
-- Parent and subtask relationships are surfaced directly in the task list and roadmap.
 
 ## Connections
 
-- A connection links 2 to 7 tasks, except `branch`, which is capped at 3 tasks (`1 root + 2 branches`).
+- A connection links 2 to 7 tasks.
 - A task can belong to only one connection.
 - A connection has:
   - optional `name`
@@ -48,22 +45,25 @@
   - `related`
 - Connection meaning:
   - `sequence`: a step-by-step chain
-  - `branch`: a split or fork in work
+  - `branch`: a rooted split or fork that can grow into a small tree
   - `dependency`: one step unlocks another
   - `related`: connected, but not strictly ordered
+- Branch connections support nested children:
+  - exactly one root
+  - at most 2 child nodes per parent
+  - at most 7 items total
+  - at most depth 7
 - Connection progress now reports:
   - `completed`
   - `available_count`
   - `blocked_count`
   - `next_available_item_id`
 
-## Planning and reminders
+## Reminders
 
-- Planning levels (`0` to `5`) can be assigned to tasks.
-- Tasks can optionally point to a parent task within the same group.
 - Reminder acknowledgement supports recurring reminders by advancing the reminder instead of clearing it.
-- Agenda and search surface reminder and planning information.
-- Roadmap mode groups tasks by reminder date and planning depth so project flow is easier to scan.
+- Agenda and search surface reminder information.
+- Roadmap mode groups tasks by reminder date so project flow is easier to scan.
 
 ## Search and diagnostics
 
@@ -73,9 +73,8 @@
   - high priority
   - reminder presence
   - connection kind
-  - planning level
   - sort mode
-- Settings exposes lightweight debug stats for groups, tasks, reminders, recurrence, planning levels, and connections.
+- Settings exposes lightweight debug stats for groups, tasks, reminders, recurrence, and connections.
 - Activity feed records important task, connection, and backup changes.
 - Local JSON backup snapshots support create, list, restore, and delete.
 - Manual sync packages support multi-device export and import without a hosted sync server.
